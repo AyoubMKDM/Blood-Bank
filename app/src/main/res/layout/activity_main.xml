@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_activity_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:title="@string/app_name"
+        android:background="?attr/colorPrimary"
+        app:menu="@menu/menu_main_activity"
+        app:titleTextColor="@color/color_text_dark"
+        />
+
+    <TextView
+        android:id="@+id/text_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_activity_toolbar"
+        android:text="Choose Location"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="16sp"
+        android:drawableEnd="@drawable/ic_location"
+        android:drawablePadding="10dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/posts_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_request"
+        android:layout_below="@id/text_location" />
+
+
+    <Button
+        android:id="@+id/button_request"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="16sp"
+        android:backgroundTint="?attr/colorSecondary"
+        android:textColor="@color/color_text_light"
+        android:text="Make Request"
+        android:textAllCaps="true"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp"
+        android:fontFamily="@font/reem_kufi_regular"/>
+</RelativeLayout>
+

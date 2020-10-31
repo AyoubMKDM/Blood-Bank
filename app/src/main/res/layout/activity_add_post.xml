@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddPostActivity"
+    android:orientation="vertical" >
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/App_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+        <Toolbar
+            android:id="@+id/add_post_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:title="Add New Post"
+            android:background="?attr/colorPrimary"
+            android:titleTextColor="@color/color_text_dark"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/post_title_settings"
+        android:layout_below="@id/App_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:backgroundTint="?attr/colorSecondary"
+        app:cardCornerRadius="14dp"
+        android:elevation="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="14dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_blood_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:drawablePadding="12dp"
+                    android:text="Post Type"
+                    android:textColor="@color/color_text_light"/>
+
+                <Spinner
+                    android:id="@+id/spinner_blood_groups"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:entries="@array/posts_type"
+                    android:spinnerMode="dropdown" />
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_input_layout_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="08dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="?attr/colorSecondaryVariant"
+                app:hintTextColor="@color/color_text_light">
+
+                <EditText
+                    android:id="@+id/edittext_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="08dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:ems="10"
+                    android:hint="Post Title"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/color_text_light"
+                    android:textAlignment="center"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <EditText
+        android:id="@+id/post_text_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/post_title_settings"
+        android:ems="10"
+        android:minHeight="120dp"
+        android:layout_margin="08dp"
+        android:inputType="textCapSentences|textImeMultiLine"
+        android:hint="Post Body ..."
+        android:gravity="start" />
+
+    <Button
+        android:id="@+id/button_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Share"
+        android:layout_below="@+id/post_text_body"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        android:drawableEnd="@drawable/ic_save"
+        android:drawablePadding="05dp"
+        android:backgroundTint="#ffca28"/>
+
+
+
+</RelativeLayout>

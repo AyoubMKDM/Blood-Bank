@@ -1,0 +1,55 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Account">
+
+        <EditTextPreference
+            android:key="user_name_preference"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Your Name" />
+        <ListPreference
+            android:entries="@array/blood_groups"
+            android:entryValues="@array/blood_groups"
+            android:key="blood_type_preference"
+            android:title="Your Blood Type" />
+        <EditTextPreference
+            android:key="user_mail_preference"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Your Email Adress" />
+        <EditTextPreference
+            android:defaultValue="true"
+            android:key="phone_number_preference"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Your Phone Number" />
+        <EditTextPreference
+            android:key="city_preference"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Your City" />
+        <EditTextPreference
+            android:key="password_preference"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Reset Password" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/sync_header">
+
+        <SwitchPreferenceCompat
+            app:key="sync"
+            app:title="@string/sync_title" />
+
+        <SwitchPreferenceCompat
+            app:dependency="sync"
+            app:key="attachment"
+            app:summaryOff="@string/attachment_summary_off"
+            app:summaryOn="@string/attachment_summary_on"
+            app:title="@string/attachment_title" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

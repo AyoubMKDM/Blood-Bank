@@ -1,0 +1,26 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.BloodBank" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/blue_50</item>
+        <item name="colorPrimaryVariant">@color/blue_50_dark</item>
+        <item name="colorOnPrimary">@color/color_text_dark</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/red_500</item>
+        <item name="colorSecondaryVariant">@color/red_500_dark</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="android:textColorPrimary">@color/color_text_dark</item>
+    </style>
+
+    <style name="Theme.BloodBank.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.BloodBank.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.BloodBank.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
