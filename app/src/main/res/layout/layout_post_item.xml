@@ -18,17 +18,47 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 <!--            TODO if you didn't need the Linear layout in the future delete it-->
-            <TextView
-                android:id="@+id/textPostType"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textAllCaps="true"
-                android:textStyle="bold"
+                android:orientation="horizontal"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="14dp"/>
+                android:layout_marginBottom="14dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+                    <TextView
+                        android:id="@+id/textUserName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:paddingBottom="5dp" />
+                    <TextView
+                        android:id="@+id/text_user_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/textPostBloodType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorSecondaryVariant"
+                    android:fontFamily="@font/reem_kufi_regular"
+                    android:padding="5dp"/>
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/textPostTitle"
                 android:layout_width="match_parent"
@@ -43,9 +73,20 @@
                 android:id="@+id/textPost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_margin="05dp"
                 android:textColor="@color/color_text_dark"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/posting_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:textAlignment="textEnd"
+                android:textSize="12sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
@@ -55,37 +96,99 @@
                 android:layout_marginBottom="8dp"
                 android:background="?attr/colorPrimary"
                 android:elevation="1dp" />
-            <LinearLayout
+            <GridLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="end">
-                <Button
-                    android:id="@+id/button_call_post"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    android:padding="15dp"
-                    android:text="Call"
-                    android:textAllCaps="true"
-                    android:fontFamily="@font/koho_bold"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:drawableEnd="@drawable/ic_call"
-                    android:drawablePadding="20dp"/>
-                <Button
-                    android:id="@+id/button_share_post"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    android:padding="15dp"
-                    android:text="Share with .."
-                    android:textAllCaps="true"
-                    android:fontFamily="@font/koho_bold"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:drawableEnd="@drawable/ic_share"
-                    android:drawablePadding="20dp"/>
-            </LinearLayout>
+                android:layout_gravity="center"
+                android:rowCount="2"
+                android:columnCount="2">
 
+                <ImageButton
+                    android:id="@+id/button_delete_post"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/button_edit_post"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_edit"
+                    android:visibility="gone" />
+                    <ImageButton
+                        android:id="@+id/button_call_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:padding="8dp"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:src="@drawable/ic_call" />
+                    <ImageButton
+                        android:id="@+id/button_share_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:padding="8dp"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:src="@drawable/ic_share" />
+            </GridLayout>
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:gravity="center">-->
+<!--                    <ImageButton-->
+<!--                        android:id="@+id/button_delete_post"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="0dp"-->
+<!--                        android:padding="8dp"-->
+<!--                        style="?android:attr/borderlessButtonStyle"-->
+<!--                        android:src="@drawable/ic_delete" />-->
+<!--                    <ImageButton-->
+<!--                        android:id="@+id/button_edit_post"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="0dp"-->
+<!--                        android:padding="8dp"-->
+<!--                        style="?android:attr/borderlessButtonStyle"-->
+<!--                        android:src="@drawable/ic_edit" />-->
+<!--                </LinearLayout>-->
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:gravity="center">-->
+<!--                    <ImageButton-->
+<!--                        android:id="@+id/button_call_post"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="0dp"-->
+<!--                        android:padding="8dp"-->
+<!--                        style="?android:attr/borderlessButtonStyle"-->
+<!--                        android:src="@drawable/ic_call" />-->
+<!--                    <ImageButton-->
+<!--                        android:id="@+id/button_share_post"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="0dp"-->
+<!--                        android:padding="8dp"-->
+<!--                        style="?android:attr/borderlessButtonStyle"-->
+<!--                        android:src="@drawable/ic_share" />-->
+<!--                </LinearLayout>-->
+<!--            </LinearLayout>-->
         </LinearLayout>
 
 

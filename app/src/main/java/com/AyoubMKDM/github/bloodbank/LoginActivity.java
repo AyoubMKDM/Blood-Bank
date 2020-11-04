@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
             mPasswordText = mEdPassword.getText().toString();
             if (!isDataEmpty()){
                 //TODO delete the unnecessary Toast messages
-                autnenticateUser();
+                authenticateUser();
             }else {
                 Toast.makeText(this,"Email or password wrong try agin!",
                         Toast.LENGTH_LONG).show();
@@ -120,8 +120,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null){
                     if (user.isEmailVerified()) {
                         Log.d(TAG, "onAuthStateChanged:signed_in");
-                        Toast.makeText(LoginActivity.this, "Authenticated with: "
-                                + user.getEmail(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this,
                                 HomePageActivity.class);
                         startActivity(intent);
@@ -139,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void autnenticateUser() {
+    private void authenticateUser() {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(mEmailText, mPasswordText)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -150,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(LoginActivity.this, "Can not login," +
-                            " make sure that: the user email or password are right",
+                            "\nmake sure you entered the right user email and password",
                             Toast.LENGTH_LONG).show();
             }
         });

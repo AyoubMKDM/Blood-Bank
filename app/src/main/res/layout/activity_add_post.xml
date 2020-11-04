@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AddPostActivity"
-    android:orientation="vertical" >
+    android:orientation="vertical">
+
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/App_bar"
@@ -17,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:title="Add New Post"
-            android:background="?attr/colorPrimary"
             android:titleTextColor="@color/color_text_dark"/>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -34,6 +34,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add_post_title_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="08dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="?attr/colorSecondaryVariant"
+                app:hintTextColor="@color/color_text_light">
+
+                <EditText
+                    android:id="@+id/edittext_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/transparent"
+                    android:focusable="true"
+                    android:hint="Post Title"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/color_text_light" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:drawablePadding="12dp"
-                    android:text="Post Type"
+                    android:text="Blood type reqested"
                     android:textColor="@color/color_text_light"/>
 
                 <Spinner
@@ -54,12 +75,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:entries="@array/posts_type"
+                    android:entries="@array/blood_groups"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/login_input_layout_email"
+                android:id="@+id/add_post_location_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="08dp"
@@ -68,17 +89,18 @@
                 app:hintTextColor="@color/color_text_light">
 
                 <EditText
-                    android:id="@+id/edittext_title"
+                    android:id="@+id/edittext_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="08dp"
                     android:backgroundTint="@android:color/transparent"
-                    android:ems="10"
-                    android:hint="Post Title"
+                    android:focusable="true"
+                    android:hint="Location"
+                    android:drawableStart="@drawable/ic_location"
+                    android:drawablePadding="10dp"
                     android:inputType="textPersonName"
-                    android:textColor="@color/color_text_light"
-                    android:textAlignment="center"/>
+                    android:textColor="@color/color_text_light" />
             </com.google.android.material.textfield.TextInputLayout>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -87,11 +109,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/post_title_settings"
-        android:ems="10"
-        android:minHeight="120dp"
-        android:layout_margin="08dp"
-        android:inputType="textCapSentences|textImeMultiLine"
-        android:hint="Post Body ..."
+        android:layout_margin="10dp"
+        android:inputType="textMultiLine"
+        android:lines="3"
+        android:maxLines="10"
+        android:hint="Enter your message here ..."
         android:gravity="start" />
 
     <Button
@@ -106,6 +128,13 @@
         android:drawablePadding="05dp"
         android:backgroundTint="#ffca28"/>
 
+<!--    <MultiAutoCompleteTextView-->
+<!--        android:id="@+id/multiAutoCompleteTextView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/post_text_body"-->
+<!--        android:layout_marginTop="27dp"-->
+<!--        android:text="MultiAutoCompleteTextView" />-->
 
 
 </RelativeLayout>

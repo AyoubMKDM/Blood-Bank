@@ -6,15 +6,21 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -24,14 +30,19 @@ import java.util.List;
 public class HomePageActivity extends AppCompatActivity {
     //Vars
     String TAG = "MainActivity";
+    //TODO define it in some contract class
+    //TODO resize gridLayout https://www.youtube.com/watch?v=b6AVdCKoyiQ
     //Widgets
     private RecyclerView mRecyclerView;
-    private List<DataModelPost> mPosts;
+    private List<PostDataModel> mPosts;
     private PostAdapter mAdapter;
     private ProgressBar loading;
-    //Firebase
-    private FirebaseUser mUser;
     private Toolbar mToolbar;
+    //Firebase
+    FirebaseDatabase mFirebaseDatabase;
+    DatabaseReference mDatabaseReference;
+    ChildEventListener mEventListener;
+    private FirebaseUser mUser;
     private DataManager mDataManager;
 
     @Override
@@ -43,32 +54,34 @@ public class HomePageActivity extends AppCompatActivity {
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         Toast.makeText(HomePageActivity.this, "Welcome! " + mUser.getDisplayName(),
-                Toast.LENGTH_LONG).show();
+                Toast.LENGTH_SHORT).show();
         // Initializing values
+        FirebaseUtil.openFBReference(this, FirebaseUtil.PATH_POST);
+        mFirebaseDatabase = FirebaseUtil.sFirebaseDatabase;
+        mDatabaseReference = FirebaseUtil.sDatabaseReference;
+        mEventListener = new DatabaseListener();
+        mDatabaseReference.addChildEventListener(mEventListener);
         mRecyclerView = findViewById(R.id.posts_recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this,
-                RecyclerView.VERTICAL, false);
-        mPosts = new ArrayList<DataModelPost>();
+        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,
+                StaggeredGridLayoutManager.VERTICAL);
+        mPosts = new ArrayList<PostDataModel>();
         mAdapter = new PostAdapter(mPosts,this);
-        TESTpopulateRecyclerView();
         //work
+//        TESTpopulateRecyclerView();
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
-        dealingWithMenu();
+        onOptionsMenuItemSelected();
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+        fab.setOnClickListener( view -> {
+            Intent intent = new Intent (HomePageActivity.this, AddPostActivity.class);
+            startActivity(intent);
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                Intent intent = new Intent (HomePageActivity.this, AddPostActivity.class);
-                startActivity(intent);
-            }
         });
+
     }
-    private void dealingWithMenu() {
+    private void onOptionsMenuItemSelected() {
         Menu menu = mToolbar.getMenu();
         mToolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()){
@@ -94,42 +107,70 @@ public class HomePageActivity extends AppCompatActivity {
 
     //TODO DELETE this method
     private void TESTpopulateRecyclerView() {
-        for (DataModelPost post : mDataManager.getPosts()){
+        for (PostDataModel post : mDataManager.getPosts()){
             mPosts.add(post) ;
         }
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseUtil.detachListener();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        checkAuthenticationState();
-    }
-
-    //TODO generlize these two methods @checkAuthenticationState @goBackToLogin
-    private void checkAuthenticationState(){
-        Log.d(TAG, "checkAuthenticationState: checking authentication state.");
-
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if(mUser == null){
-            Log.d(TAG, "checkAuthenticationState: user is null, navigating back to login screen.");
-            goBackToLogin();
-        }else{
-            Log.d(TAG, "checkAuthenticationState: user is authenticated.");
-        }
-    }
-
-    private void goBackToLogin() {
-        Intent intent = new Intent(HomePageActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+        FirebaseUtil.attachListener();
     }
 
     private void signout() {
         Log.d(TAG, "signOut: signing out");
         FirebaseAuth.getInstance().signOut();
-        goBackToLogin();
+        FirebaseUtil.attachListener();
+    }
+
+    public class DatabaseListener implements ChildEventListener {
+        @Override
+        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            PostDataModel post = snapshot.getValue(PostDataModel.class);
+            post.setPostId(snapshot.getKey());
+            populateMainScreen(post);
+        }
+
+        private void populateMainScreen(PostDataModel post) {
+            mPosts.add(post);
+            mAdapter.notifyItemInserted(mPosts.size()-1);
+//            mAdapter = new PostAdapter(mPosts,this);
+        }
+
+        @Override
+        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+        }
+
+        @Override
+        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+            //TODO make sure this is the optimal solution
+            int index = -1;
+            for (int i = 0; i < mPosts.size(); i++){
+                if (mPosts.get(i).getPostId().equals(snapshot.getKey())) index = i;
+            }
+            if (index != -1) {
+                mPosts.remove(index);
+                mAdapter.notifyItemRemoved(index);
+            }
+        }
+
+        @Override
+        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
     }
 }

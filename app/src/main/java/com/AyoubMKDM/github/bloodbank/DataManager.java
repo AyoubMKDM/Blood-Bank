@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DataManager {
     private static DataManager ourInstance = null;
-    private List<DataModelPost> mPosts = new ArrayList<>();
+    private List<PostDataModel> mPosts = new ArrayList<>();
 
     public static DataManager getInstance() {
         if(ourInstance == null) {
@@ -19,23 +19,23 @@ public class DataManager {
         final String lorem_ipsum = "Lorem Ipsum is simply dummy text of the printing and typesetting" +
                 " industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," +
                 " when an unknown printer took a galley";
-        mPosts.add(new DataModelPost("Title ", lorem_ipsum));
-        mPosts.add(new DataModelPost("Title ", lorem_ipsum));
-        mPosts.add(new DataModelPost("Title ", lorem_ipsum));
-        mPosts.add(new DataModelPost("Title ", lorem_ipsum));
-        mPosts.add(new DataModelPost("Title ", lorem_ipsum));
-        mPosts.add(new DataModelPost("Title ", lorem_ipsum));
+        mPosts.add(new PostDataModel("Title ", lorem_ipsum));
+        mPosts.add(new PostDataModel("Title ", lorem_ipsum));
+        mPosts.add(new PostDataModel("Title ", lorem_ipsum));
+        mPosts.add(new PostDataModel("Title ", lorem_ipsum));
+        mPosts.add(new PostDataModel("Title ", lorem_ipsum));
+        mPosts.add(new PostDataModel("Title ", lorem_ipsum));
     }
     
-    public  void addPost(DataModelPost post){
+    public  void addPost(PostDataModel post){
         mPosts.add(post);
     }
 
-    public List<DataModelPost> getPosts() {
+    public List<PostDataModel> getPosts() {
         return mPosts;
     }
 
-    public void setPosts(List<DataModelPost> posts) {
+    public void setPosts(List<PostDataModel> posts) {
         mPosts = posts;
     }
 
