@@ -2,6 +2,7 @@ package com.AyoubMKDM.github.bloodbank;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,18 +22,31 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignUpActivity extends AppCompatActivity {
+    //Vars
+    private final String TAG = "SignUpActivity";
+    //Widgets
     private TextInputLayout mInputLayoutName, mInputLayoutEmail, mInputLayoutCity,
             mInputLayoutPassword;
     private EditText mEdFullName, mEdEmail, mEdPhoneNumber, mEdCity, mEdPassword;
     private Spinner mSpinnerBloodGroup;
     private ProgressBar mLoading;
+    private CardView mCardView;
     private Button mButtonRegister;
     private String mFullNameText, mEmailText, mCityText, mPassword, mPhoneNumber, mBloodType;
-    private String TAG;
-    private FirebaseUser mUser;
     private SharedPreferences mUserSharedPref;
+    //Firebase
+    private FirebaseUser mUser;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseFirestore mFirestoreDB;
+    private DocumentReference mDocument;
+    private FirebaseDatabase mDB;
+    private DatabaseReference mRef;
 
 
     @Override
@@ -45,6 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
         mInputLayoutPassword = findViewById(R.id.signup_input_layout_password);
         mEdFullName = findViewById(R.id.signup_edittext_fullname);
         mEdEmail = findViewById(R.id.signup_edittext_email);
+        mCardView = findViewById(R.id.signup_cardview);
         mEdPhoneNumber = findViewById(R.id.signup_edittext_phone_number);
         mEdCity = findViewById(R.id.signup_edittext_city);
         mEdPassword = findViewById(R.id.signup_edittext_password);
@@ -52,70 +67,87 @@ public class SignUpActivity extends AppCompatActivity {
         mButtonRegister = findViewById(R.id.button_register);
         mLoading = findViewById(R.id.singup_progress_bar);
         //TODO add alert dialog to inform the user that the data will be public
-
+        initializeFirebaseDatabase();
         mButtonRegister.setOnClickListener(l -> {
             //TODO close softkeyboard https://medium.com/@rmirabelle/close-hide-the-soft-keyboard-in-android-db1da22b09d2
+            mCardView.setVisibility(View.GONE);
             mLoading.setVisibility(View.VISIBLE);
             getData();
             if (!isDataEmpty()) {
                 isEmailValid();
                 if (isEmailValid()){
-                    registerNewDonor(mFullNameText, mEmailText, mPhoneNumber, mCityText,
-                            mPassword, mBloodType);
+                    registerNewDonor();
                 }
             }
-            mLoading.setVisibility(View.GONE);
         });
     }
 
-    private void registerNewDonor(String fullName, String email, String phoneNumber, String city
-            , String password, String bloodType){
-//        Loading();//TODO
-        addNewUserToFirebase(fullName, email, phoneNumber, city, password, bloodType);
+    private void registerNewDonor(){
+        addNewUserToFirebase();
+        // store the data in the shared preferences
+        initializeUsersPreference();
     }
 
-    private void addNewUserToFirebase(String fullName, String email, String phoneNumber, String city
-            , String password, String bloodType) {
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password)
-                .addOnCompleteListener( task -> {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                TAG = "SignUpActivity";
-                                Log.d(TAG, "createUserWithEmail:success");
-                                mUser = FirebaseAuth.getInstance()
-                                        .getCurrentUser();
-                                Log.d(TAG, "onComplete: user Id" + mUser.getUid());
-                                sendVerificationEmail();
-                                setTheUserName(fullName);
-                                // store the data in the shared prefrences
-                                addNewUsersPrefrence(fullName, email, phoneNumber, city, bloodType);
-
-                                FirebaseAuth.getInstance().signOut();
-                                redirectToLogin();
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(SignUpActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-
-                });
+    private void addNewUserToFirebase() {
+       mFirebaseAuth.createUserWithEmailAndPassword(mEmailText,mPassword)
+        .addOnCompleteListener( task -> {
+            mLoading.setVisibility(View.GONE);
+            if (task.isSuccessful()) {
+                // Sign in success, update UI with the signed-in user's information
+                mUser = mFirebaseAuth.getCurrentUser();
+                //TODO clean the code after this line
+                addUserInfoToFirebaseDB();
+                FirebaseAuth.getInstance().signOut();
+                FirebaseUtil.redirectToLogin(this);
+            }
+        }).addOnFailureListener(e -> canNotAddUser(e));
     }
 
-    private void addNewUsersPrefrence(String fullName, String email, String phoneNumber, String city, String bloodType) {
+    private void addUserInfoToFirebaseDB() {
+        String Uid = mUser.getUid();
+        UserDataModel user = new UserDataModel(Uid, mFullNameText,mCityText, mBloodType
+                ,mPhoneNumber);
+        mRef.child(Uid).setValue(user).addOnFailureListener(e -> {
+            canNotAddUser(e);
+            return;
+        });
+        sendVerificationEmail();
+        setTheUserName();
+    }
+
+    private void canNotAddUser(Exception e) {
+        Toast.makeText(SignUpActivity.this,
+                "The account can not be created. " +
+                        "\n" + e.toString(),Toast.LENGTH_SHORT).show();
+        mUser.delete();
+        Intent intent = new Intent(SignUpActivity.this, SignUpActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+        return;
+    }
+
+    //TODO add this method to @SplashScreenActivity
+    private void initializeFirebaseDatabase() {
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mDB = FirebaseDatabase.getInstance();
+        mRef = mDB.getReference().child(FirebaseUtil.USER_PATH);
+    }
+
+    private void initializeUsersPreference() {
         mUserSharedPref = getSharedPreferences("UserPrefs",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mUserSharedPref.edit();
-        editor.putString(getString(R.string.shared_pref_uName), fullName);
-        editor.putString(getString(R.string.shared_pref_uCity), city);
-        editor.putString(getString(R.string.shared_pref_uEmail), email);
-        editor.putString(getString(R.string.shared_pref_uBloodType) , bloodType);
-        editor.putString(getString(R.string.shared_pref_uPhoneNumber), phoneNumber);
+        editor.putString(getString(R.string.shared_pref_uName), mFullNameText);
+        editor.putString(getString(R.string.shared_pref_uCity), mCityText);
+        editor.putString(getString(R.string.shared_pref_uEmail), mEmailText);
+        editor.putString(getString(R.string.shared_pref_uBloodType) , mBloodType);
+        editor.putString(getString(R.string.shared_pref_uPhoneNumber), mPhoneNumber);
         editor.apply();
     }
 
-    private void setTheUserName(String fullName) {
+    private void setTheUserName() {
         UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder().
-                setDisplayName(fullName).build();
+                setDisplayName(mFullNameText).build();
         mUser.updateProfile(profileUpdate).addOnCompleteListener(task -> {
            if (task.isSuccessful()){
                Log.d(TAG, "setTheUserName: user profile updates");
@@ -126,29 +158,6 @@ public class SignUpActivity extends AppCompatActivity {
            }
         });
     }
-
-    /*TODO redirectToLogin || goBackToLogin should be in an indeviduel class should have
-    * @param context
-    * */
-    private void redirectToLogin() {
-        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
-
-//    private void Loading() {
-//        final LodingAlertDialog loading = new LodingAlertDialog(SignUpActivity.this);
-//        loading.startLoadingDialog();
-//
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                loading.dismissDialog();
-//            }
-//        },3000);
-//    }
 
     private void getData() {
         mFullNameText = mEdFullName.getText().toString();

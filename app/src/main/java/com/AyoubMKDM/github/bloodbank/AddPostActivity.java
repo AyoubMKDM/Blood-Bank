@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -52,7 +50,7 @@ public class AddPostActivity extends AppCompatActivity {
             finish();
         });
         FirebaseUtil.openFBReference(this, FirebaseUtil.PATH_POST);
-        mFirebaseDatabase = FirebaseUtil.sFirebaseDatabase;
+        mFirebaseDatabase = FirebaseUtil.sDB;
         mDatabaseReference = FirebaseUtil.sDatabaseReference;
         mUser = FirebaseUtil.sFirebaseAuth.getCurrentUser();
         mButtonShare = findViewById(R.id.button_share);
@@ -84,6 +82,8 @@ public class AddPostActivity extends AppCompatActivity {
 
         private void DatabaseUpdatePost() {
         setDatabasePostClass();
+
+        //TODO test the update
         mDatabaseReference.child(mPost.getPostId()).setValue(mPost, (error, ref) -> {
             if (error != null) {
                 Toast.makeText(this, "Couldn't Update this request, "
@@ -98,6 +98,7 @@ public class AddPostActivity extends AppCompatActivity {
     }
 
     private void setDatabasePostClass() {
+        mPost.setUserId(mUser.getUid());
         mPost.setUserLocation(mLocationRequest.getText().toString());
         mPost.setPostRequestedBloodType(mBloodTypeRequested.getSelectedItem().toString());
         mPost.setPostTitle(mPostTitle.getText().toString());
@@ -143,8 +144,6 @@ public class AddPostActivity extends AppCompatActivity {
                         , Toast.LENGTH_LONG).show();
             }
             //TODO close softkeyboard
-//            mPostTitle.clearFocus();
-//            mPostTextBody.clearFocus();
         });
 
     }

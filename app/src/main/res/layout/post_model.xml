@@ -19,6 +19,8 @@
             android:orientation="vertical">
 <!--            TODO if you didn't need the Linear layout in the future delete it-->
             <LinearLayout
+                android:id="@+id/header"
+                android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -36,7 +38,7 @@
                         android:id="@+id/textUserName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16dp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         android:paddingBottom="5dp" />
                     <TextView

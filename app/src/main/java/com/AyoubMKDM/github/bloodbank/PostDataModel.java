@@ -12,6 +12,16 @@ public class PostDataModel implements Parcelable {
     private String postTitle;
     private String postTextBody;
     private String postDateAdding;
+    //TODO delete this if is not needed
+//    private UserDataModel user;
+
+//    public UserDataModel getUser() {
+//        return user;
+//    }
+
+//    public void setUser(UserDataModel user) {
+//        this.user = user;
+//    }
 
     public PostDataModel() {}
 
@@ -23,12 +33,6 @@ public class PostDataModel implements Parcelable {
         this.postTitle = postTitle;
         this.postTextBody = postTextBody;
         this.postDateAdding = postDateAdding;
-    }
-
-    public PostDataModel(String postTitle, String textBody) {
-        this.postRequestedBloodType = "Request";
-        this.postTitle = postTitle;
-        this.postTextBody = textBody;
     }
 
     protected PostDataModel(Parcel in) {

@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.List;
 public class HomePageActivity extends AppCompatActivity {
     //Vars
     String TAG = "MainActivity";
-    //TODO define it in some contract class
+    //TODO define it in a utility class
     //TODO resize gridLayout https://www.youtube.com/watch?v=b6AVdCKoyiQ
     //Widgets
     private RecyclerView mRecyclerView;
@@ -39,7 +38,7 @@ public class HomePageActivity extends AppCompatActivity {
     private ProgressBar loading;
     private Toolbar mToolbar;
     //Firebase
-    FirebaseDatabase mFirebaseDatabase;
+    FirebaseDatabase mDB;
     DatabaseReference mDatabaseReference;
     ChildEventListener mEventListener;
     private FirebaseUser mUser;
@@ -49,15 +48,12 @@ public class HomePageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        mDataManager = DataManager.getInstance();
         mToolbar = findViewById(R.id.main_activity_toolbar);
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-        Toast.makeText(HomePageActivity.this, "Welcome! " + mUser.getDisplayName(),
-                Toast.LENGTH_SHORT).show();
         // Initializing values
         FirebaseUtil.openFBReference(this, FirebaseUtil.PATH_POST);
-        mFirebaseDatabase = FirebaseUtil.sFirebaseDatabase;
+        mDB = FirebaseUtil.sDB;
         mDatabaseReference = FirebaseUtil.sDatabaseReference;
         mEventListener = new DatabaseListener();
         mDatabaseReference.addChildEventListener(mEventListener);
@@ -94,6 +90,9 @@ public class HomePageActivity extends AppCompatActivity {
                     Log.d(TAG, "onCreate: Setting luanched");
                     settings();
                     return true;
+                case R.id.app_bar_search:
+                    Intent intent = new Intent(HomePageActivity.this,SearchActivity.class);
+                    startActivity(intent);
                 default:
                     return false;
             }
@@ -103,14 +102,6 @@ public class HomePageActivity extends AppCompatActivity {
     private void settings() {
         Intent intent = new Intent(HomePageActivity.this, SettingsActivity.class);
         startActivity(intent);
-    }
-
-    //TODO DELETE this method
-    private void TESTpopulateRecyclerView() {
-        for (PostDataModel post : mDataManager.getPosts()){
-            mPosts.add(post) ;
-        }
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -142,7 +133,6 @@ public class HomePageActivity extends AppCompatActivity {
         private void populateMainScreen(PostDataModel post) {
             mPosts.add(post);
             mAdapter.notifyItemInserted(mPosts.size()-1);
-//            mAdapter = new PostAdapter(mPosts,this);
         }
 
         @Override

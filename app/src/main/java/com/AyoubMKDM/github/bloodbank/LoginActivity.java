@@ -3,7 +3,9 @@ package com.AyoubMKDM.github.bloodbank;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +22,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
     private String TAG = "LoginActivity";
@@ -33,12 +37,14 @@ public class LoginActivity extends AppCompatActivity {
     //Firebase
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ResendVerfDailog LOADING;
+    private FirebaseAuth mFirebaseAuth;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        FirebaseUtil.openFBReference(this, FirebaseUtil.PATH_POST);
         mInputLayoutEmail = findViewById(R.id.login_input_layout_email);
         mInputLayoutPassword = findViewById(R.id.login_input_layout_password);
         mEdEmail = findViewById(R.id.login_edittext_email);
@@ -74,7 +80,6 @@ public class LoginActivity extends AppCompatActivity {
 //            LOADING.dismissDialog();TODO add a progressBar and controle it
 //            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 //            startActivity(intent);
-            mLoading.setVisibility(View.GONE);
         });
     }
 
@@ -108,6 +113,17 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void addNewUsersPrefrence(String fullName, String email, String phoneNumber, String city, String bloodType) {
+        SharedPreferences mUserSharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mUserSharedPref.edit();
+        editor.putString(getString(R.string.shared_pref_uName), fullName);
+        editor.putString(getString(R.string.shared_pref_uCity), city);
+        editor.putString(getString(R.string.shared_pref_uEmail), email);
+        editor.putString(getString(R.string.shared_pref_uBloodType) , bloodType);
+        editor.putString(getString(R.string.shared_pref_uPhoneNumber), phoneNumber);
+        editor.apply();
+    }
+
     /*
             ----------------------------- Firebase setup ---------------------------------
          */
@@ -138,11 +154,24 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void authenticateUser() {
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(mEmailText, mPasswordText)
+        FirebaseDatabase DB = FirebaseUtil.sDB;
+        DatabaseReference ref = DB.getReference().child(FirebaseUtil.USER_PATH);
+        mFirebaseAuth = FirebaseUtil.sFirebaseAuth;
+        mFirebaseAuth.signInWithEmailAndPassword(mEmailText, mPasswordText)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        mLoading.setVisibility(View.GONE);
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                            String fullName = user.getDisplayName();
+                            String email = user.getEmail();
+                        }
+//                        String phoneNumber = ref.
+//                        addNewUsersPrefrence(fullName, email, phoneNumber, city, bloodType);
                     }
+//                            Toast.makeText(HomePageActivity.this, "Welcome! " + mUser.getDisplayName(),
+//                    Toast.LENGTH_SHORT).show();
                 })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
