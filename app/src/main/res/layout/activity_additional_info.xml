@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUpActivity"
+    tools:context=".AdditionalInfoActivity"
     android:orientation="vertical">
 
     <ImageView
@@ -25,7 +25,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/signup_cardview"
-        android:layout_weight="4"
+        android:layout_weight="2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
@@ -50,10 +50,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:text="Sign up"
+                    android:fontFamily="@font/koho_bold"
+                    android:text="Additional information"
                     android:textAlignment="center"
-                    android:textSize="30sp"
-                    android:fontFamily="@font/koho_bold"/>
+                    android:textSize="30sp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/signup_inputLayout_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="05dp"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    app:boxStrokeColor="?attr/colorSecondaryVariant"
+                    app:hintTextColor="?attr/colorSecondaryVariant">
+
+                    <EditText
+                        android:id="@+id/signup_edittext_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_costum_person"
+                        android:drawablePadding="12dp"
+                        android:hint="Full name"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -75,7 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:entries="@array/blood_groups"
+                        android:entries="@array/blood_entries"
                         android:spinnerMode="dropdown" />
                 </LinearLayout>
 
@@ -87,44 +106,50 @@
                     android:background="?attr/colorPrimary"
                     android:elevation="3dp" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/signup_input_layout_fullname"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="05dp"
-                    app:boxBackgroundColor="@android:color/transparent"
-                    app:boxStrokeColor="?attr/colorSecondaryVariant"
-                    app:hintTextColor="?attr/colorSecondaryVariant">
+                    android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/signup_edittext_fullname"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/text_gender"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_costum_person"
+                        android:layout_weight="3"
                         android:drawablePadding="12dp"
-                        android:hint="Full Name"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Gender"
+                        app:drawableStartCompat="@drawable/ic_gender" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/signup_input_layout_email"
+                    <Spinner
+                        android:id="@+id/spinner_gender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/gender"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="05dp"
-                    app:boxBackgroundColor="@android:color/transparent"
-                    app:boxStrokeColor="?attr/colorSecondaryVariant"
-                    app:hintTextColor="?attr/colorSecondaryVariant">
+                    android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/signup_edittext_email"
+                    <ImageView
+                        android:id="@+id/img_country_flag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"/>
+
+                    <Button
+                        android:id="@+id/button_country"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_costum_email"
-                        android:drawablePadding="12dp"
-                        android:hint="Email Adress"
-                        android:inputType="textEmailAddress"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:drawableEnd="@drawable/ic_location"
+                        android:drawablePadding="20dp"
+                        android:text="Chose your country" />
+                </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signup_input_layout_phone_number"
@@ -166,26 +191,11 @@
                         android:singleLine="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/signup_input_layout_password"
+                <CheckBox
+                    android:id="@+id/checkBox_share_infos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="05dp"
-                    app:boxBackgroundColor="@android:color/transparent"
-                    app:boxStrokeColor="?attr/colorSecondaryVariant"
-                    app:hintTextColor="?attr/colorSecondaryVariant"
-                    app:passwordToggleEnabled="true">
-
-                    <EditText
-                        android:id="@+id/signup_edittext_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_costum_lock"
-                        android:drawablePadding="12dp"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:text="Accept to share this information to public" />
 
                 <View
                     android:layout_width="match_parent"
@@ -198,13 +208,13 @@
                     android:elevation="3dp" />
 
                 <Button
-                    android:id="@+id/button_register"
+                    android:id="@+id/button_submit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="0dp"
                     android:padding="15dp"
-                    android:text="Become a donor"
+                    android:text="Submit"
                     android:gravity="left"
                     android:textAllCaps="true"
                     android:fontFamily="@font/koho_bold"
@@ -214,6 +224,4 @@
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>
-
-
 </LinearLayout>

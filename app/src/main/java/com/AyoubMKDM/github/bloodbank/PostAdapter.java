@@ -20,6 +20,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,9 +36,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private Context context;
     FirebaseDatabase mDB;
     DatabaseReference databaseReference;
-    FirebaseUtil firebaseUtil;
+    private FirebaseUser mUser;
 
     public PostAdapter(List<PostDataModel> posts, Context context) {
+        connectToFirebaseDB();
         this.posts = posts;
         this.context = context;
     }
@@ -46,10 +49,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.post_model, parent, false);
-        firebaseUtil.openFBReference(context, FirebaseUtil.PATH_POST);
-        mDB = firebaseUtil.sDB;
-        databaseReference = firebaseUtil.sDatabaseReference;
         return new ViewHolder(view);
+    }
+
+    private void connectToFirebaseDB() {
+        FirebaseUtil.openFBReference(context);
+        mDB = FirebaseUtil.sDB;
+        databaseReference = FirebaseUtil.sDatabaseReference.child(FirebaseUtil.PATH_POST);
+        mUser = FirebaseUtil.sFirebaseAuth.getCurrentUser();
     }
 
 
@@ -66,7 +73,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.buttonDelete.setOnClickListener(view -> onDeleteClick(view, position));
         holder.buttonEdit.setOnClickListener(view -> onEditClick(position));
         if (position >= 0) {
-            if (posts.get(position).getUserId().equals(FirebaseUtil.sFirebaseAuth.getUid())) {
+            if (posts.get(position).getUserId().equals(mUser.getUid())) {
                 holder.buttonEdit.setVisibility(View.VISIBLE);
                 holder.buttonDelete.setVisibility(View.VISIBLE);
                 holder.buttonCall.setVisibility(View.GONE);

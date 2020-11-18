@@ -14,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,7 +30,6 @@ import java.util.List;
 public class HomePageActivity extends AppCompatActivity {
     //Vars
     String TAG = "MainActivity";
-    //TODO define it in a utility class
     //TODO resize gridLayout https://www.youtube.com/watch?v=b6AVdCKoyiQ
     //Widgets
     private RecyclerView mRecyclerView;
@@ -38,71 +38,9 @@ public class HomePageActivity extends AppCompatActivity {
     private ProgressBar loading;
     private Toolbar mToolbar;
     //Firebase
-    FirebaseDatabase mDB;
-    DatabaseReference mDatabaseReference;
-    ChildEventListener mEventListener;
-    private FirebaseUser mUser;
-    private DataManager mDataManager;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
-        mToolbar = findViewById(R.id.main_activity_toolbar);
-
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-        // Initializing values
-        FirebaseUtil.openFBReference(this, FirebaseUtil.PATH_POST);
-        mDB = FirebaseUtil.sDB;
-        mDatabaseReference = FirebaseUtil.sDatabaseReference;
-        mEventListener = new DatabaseListener();
-        mDatabaseReference.addChildEventListener(mEventListener);
-        mRecyclerView = findViewById(R.id.posts_recycler_view);
-        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,
-                StaggeredGridLayoutManager.VERTICAL);
-        mPosts = new ArrayList<PostDataModel>();
-        mAdapter = new PostAdapter(mPosts,this);
-        //work
-//        TESTpopulateRecyclerView();
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        onOptionsMenuItemSelected();
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener( view -> {
-            Intent intent = new Intent (HomePageActivity.this, AddPostActivity.class);
-            startActivity(intent);
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-        });
-
-    }
-    private void onOptionsMenuItemSelected() {
-        Menu menu = mToolbar.getMenu();
-        mToolbar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()){
-                case R.id.option_sign_out:
-                    //TODO add dialog for confirmation
-                    Log.d(TAG, "onCreate: signed out");
-                    signout();
-                    return true;
-                case R.id.option_settings:
-                    Log.d(TAG, "onCreate: Setting luanched");
-                    settings();
-                    return true;
-                case R.id.app_bar_search:
-                    Intent intent = new Intent(HomePageActivity.this,SearchActivity.class);
-                    startActivity(intent);
-                default:
-                    return false;
-            }
-        });
-    }
-
-    private void settings() {
-        Intent intent = new Intent(HomePageActivity.this, SettingsActivity.class);
-        startActivity(intent);
-    }
+    private FirebaseDatabase mDB;
+    private DatabaseReference mDatabaseReference;
+    private ChildEventListener mEventListener;
 
     @Override
     protected void onPause() {
@@ -116,10 +54,80 @@ public class HomePageActivity extends AppCompatActivity {
         FirebaseUtil.attachListener();
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_page);
+        mToolbar = findViewById(R.id.main_activity_toolbar);
+
+        // Initializing values
+        ConnectToFirbase();
+        mEventListener = new DatabaseListener();
+        mDatabaseReference.addChildEventListener(mEventListener);
+        mRecyclerView = findViewById(R.id.posts_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,
+                StaggeredGridLayoutManager.VERTICAL);
+        mPosts = new ArrayList<PostDataModel>();
+        mAdapter = new PostAdapter(mPosts,this);
+        //work
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        onOptionsMenuItemSelected();
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener( view -> {
+            Intent intent = new Intent (HomePageActivity.this, AddPostActivity.class);
+            startActivity(intent);
+        });
+
+    }
+
+    private void ConnectToFirbase() {
+        FirebaseUtil.openFBReference(this);
+        mDB = FirebaseUtil.sDB;
+        mDatabaseReference = FirebaseUtil.sDatabaseReference.child(FirebaseUtil.PATH_POST);
+    }
+
+    private void onOptionsMenuItemSelected() {
+        Menu menu = mToolbar.getMenu();
+        mToolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()){
+                case R.id.option_sign_out:
+                    showSignOutAlert();
+                    Log.d(TAG, "onCreate: signed out");
+                    return true;
+                case R.id.option_settings:
+                    Log.d(TAG, "onCreate: Setting luanched");
+                    goToSettings();
+                    return true;
+                case R.id.app_bar_search:
+                    Intent intent = new Intent(HomePageActivity.this,SearchActivity.class);
+                    startActivity(intent);
+                default:
+                    return false;
+            }
+        });
+    }
+
+    private void showSignOutAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Sign out");
+        builder.setMessage("Are you sure you want to sign out");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Yes", (dialog, which) -> signout());
+        builder.setNegativeButton("No", (dialog, which) -> dialog.cancel());
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void goToSettings() {
+        Intent intent = new Intent(HomePageActivity.this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
     private void signout() {
         Log.d(TAG, "signOut: signing out");
         FirebaseAuth.getInstance().signOut();
-        FirebaseUtil.attachListener();
     }
 
     public class DatabaseListener implements ChildEventListener {

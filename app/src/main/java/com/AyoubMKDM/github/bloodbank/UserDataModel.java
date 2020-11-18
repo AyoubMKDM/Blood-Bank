@@ -22,15 +22,26 @@ public class UserDataModel {
     private String userCity;
     private String userBloodType;
     private String userPhoneNumber;
+    private String userCountry;
+
+    public String getUserCountry() {
+        return userCountry;
+    }
+
+    public void setUserCountry(String userCountry) {
+        this.userCountry = userCountry;
+    }
 
     public UserDataModel() {}
 
-    public UserDataModel(String userId, String userName, String userCity, String userBloodType, String userPhoneNumber) {
+    public UserDataModel(String userId, String userName, String userCity, String userBloodType,
+                         String userPhoneNumber, String userCountry) {
         this.userId = userId;
         this.userName = userName;
         this.userCity = userCity;
         this.userBloodType = userBloodType;
         this.userPhoneNumber = userPhoneNumber;
+        this.userCountry = userCountry;
     }
 
 

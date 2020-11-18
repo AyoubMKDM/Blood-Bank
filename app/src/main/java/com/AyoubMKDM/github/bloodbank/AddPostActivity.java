@@ -49,10 +49,7 @@ public class AddPostActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-        FirebaseUtil.openFBReference(this, FirebaseUtil.PATH_POST);
-        mFirebaseDatabase = FirebaseUtil.sDB;
-        mDatabaseReference = FirebaseUtil.sDatabaseReference;
-        mUser = FirebaseUtil.sFirebaseAuth.getCurrentUser();
+        connectToFirebaseDB();
         mButtonShare = findViewById(R.id.button_share);
         mPostTitle = findViewById(R.id.edittext_title);
         mPostTitleHolder = findViewById(R.id.add_post_title_holder);
@@ -80,7 +77,14 @@ public class AddPostActivity extends AppCompatActivity {
         });
     }
 
-        private void DatabaseUpdatePost() {
+    private void connectToFirebaseDB() {
+        FirebaseUtil.openFBReference(this);
+        mFirebaseDatabase = FirebaseUtil.sDB;
+        mDatabaseReference = FirebaseUtil.sDatabaseReference.child(FirebaseUtil.USER_PATH);
+        mUser = FirebaseUtil.sFirebaseAuth.getCurrentUser();
+    }
+
+    private void DatabaseUpdatePost() {
         setDatabasePostClass();
 
         //TODO test the update
@@ -107,7 +111,7 @@ public class AddPostActivity extends AppCompatActivity {
 
     private void updateActivityFields() {
         mLocationRequest.setText(mPost.getUserLocation());
-        String[] list = getResources().getStringArray(R.array.blood_groups);
+        String[] list = getResources().getStringArray(R.array.blood_entries);
         int index;
         for (index = 0; index < list.length; index++){
             if (list[index].equals(mPost.getPostRequestedBloodType()))

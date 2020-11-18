@@ -1,32 +1,5 @@
 <resources>
     <string name="app_name">Blood Bank</string>
-
-    <string-array name="blood_groups">
-        <item>A+</item>
-        <item>A-</item>
-        <item>B+</item>
-        <item>B-</item>
-        <item>AB+</item>
-        <item>AB-</item>
-        <item>O+</item>
-        <item>O-</item>
-    </string-array>
-
-    <string-array name="entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-    </string-array>
-
-    <string-array name="posts_type">
-        <item>Request</item>
-    </string-array>
-
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->

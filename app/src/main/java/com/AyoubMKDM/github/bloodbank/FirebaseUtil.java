@@ -18,45 +18,36 @@ import java.util.ArrayList;
 public class FirebaseUtil {
     public static final String PATH_POST = "Post request";
     public static final String USER_PATH = "Users_info";
-    public static final String USERS_COLLECTION = "Users";
     public static FirebaseDatabase sDB;
     public static DatabaseReference sDatabaseReference;
     public static FirebaseAuth sFirebaseAuth;
     public static FirebaseAuth.AuthStateListener sAuthStateListener;
     private static FirebaseUtil firebaseUtil;
-    public static FirebaseUser sUser;
     public static ArrayList<PostDataModel> sPosts   ;
     private static Context sCaller;
-    //Firebase Cloud
-    public static FirebaseFirestore sFirestoreDB;
-    public static DocumentReference sDocumentReference;
 
     private FirebaseUtil() {}
-    public static void openFBReference(Context caller, String ref){
+    public static void openFBReference(Context caller){
         if (firebaseUtil == null){
             firebaseUtil = new FirebaseUtil();
             sDB = FirebaseDatabase.getInstance();
             sFirebaseAuth = FirebaseAuth.getInstance();
-            sUser = sFirebaseAuth.getCurrentUser();
             sCaller = caller;
             sAuthStateListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    checkAuthentication(caller);
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if(user == null){
+                        redirectToLogin(caller);
+                    }else{
+                        Log.d("TAG", "checkAuthenticationState: user is authenticated.");
+                    }
                 }
             };
         }
         sPosts = new ArrayList<>();
-        sDatabaseReference = sDB.getReference().child(ref);
+        sDatabaseReference = sDB.getReference();
     }
-    public static void checkAuthentication(Context context){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null){
-            redirectToLogin(context);
-        }else{
-            Log.d("TAG", "checkAuthenticationState: user is authenticated.");
-        }
-        }
 
     public static void redirectToLogin(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -72,11 +63,4 @@ public class FirebaseUtil {
         sFirebaseAuth.removeAuthStateListener(sAuthStateListener);
     }
 
-    public static void openUsersCollection(String uid){
-        if (sFirestoreDB == null){
-            sFirestoreDB = FirebaseFirestore.getInstance();
-            sDocumentReference = sFirestoreDB.collection(USERS_COLLECTION).document(uid);
-        }
-
-    }
 }

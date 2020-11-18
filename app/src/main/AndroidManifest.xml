@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BloodBank">
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SearchActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".AddPostActivity" />
         <activity
@@ -22,7 +23,7 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".SignUpActivity" />
+        <activity android:name=".AdditionalInfoActivity" />
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

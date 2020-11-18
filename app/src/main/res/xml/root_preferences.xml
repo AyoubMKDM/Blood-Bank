@@ -9,8 +9,8 @@
             android:singleLine="true"
             android:title="Your Name" />
         <ListPreference
-            android:entries="@array/blood_groups"
-            android:entryValues="@array/blood_groups"
+            android:entries="@array/blood_entries"
+            android:entryValues="@array/blood_entries"
             android:key="blood_type_preference"
             android:title="Your Blood Type" />
         <EditTextPreference

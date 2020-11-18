@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-database:19.5.0'
     implementation 'com.google.firebase:firebase-auth:19.4.0'
+    implementation 'com.github.mukeshsolanki:country-picker-android:2.0.4'
 }
 
 apply plugin: 'com.google.gms.google-services'
