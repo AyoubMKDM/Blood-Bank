@@ -102,7 +102,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     private void onDeleteClick(View view, int position) {
-        //TODO implement delete function
         databaseReference.child(posts.get(position).getPostId()).removeValue((error, ref) -> {
             if (error != null) {
                 Toast.makeText(view.getContext(), "Couldn't Delete this request, "
@@ -198,4 +197,3 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
 }
-//TODO limit the posts lines

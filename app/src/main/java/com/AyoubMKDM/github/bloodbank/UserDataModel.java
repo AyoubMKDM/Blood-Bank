@@ -24,6 +24,17 @@ public class UserDataModel {
     private String userPhoneNumber;
     private String userCountry;
 
+    public String getUserDonationTimes() {
+        return userDonationTimes;
+    }
+
+    public void setUserDonationTimes(String userDonationTimes) {
+        this.userDonationTimes = userDonationTimes;
+    }
+
+    //TODO this is temporary for to approximate search using fuzzy algorithm later change it to the number of donation
+    private String userDonationTimes;
+
     public String getUserCountry() {
         return userCountry;
     }

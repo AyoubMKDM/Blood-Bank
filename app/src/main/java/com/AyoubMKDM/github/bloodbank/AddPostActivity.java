@@ -75,7 +75,6 @@ public class AddPostActivity extends AppCompatActivity {
             SoftKeyboard.hide(this);
             if (mIsNew) {
                 writeToDatabase();
-                redirectToHome();
             } else {
                 DatabaseUpdatePost();
                 redirectToHome();
@@ -88,8 +87,8 @@ public class AddPostActivity extends AppCompatActivity {
         ref.orderByKey().equalTo(mUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot sp : snapshot.getChildren()) {
-                    UserDataModel location = sp.getValue(UserDataModel.class);
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    UserDataModel location = data.getValue(UserDataModel.class);
                     mLocationRequest.setText(location.getUserCity());
                 }
             }
@@ -116,6 +115,7 @@ public class AddPostActivity extends AppCompatActivity {
                         + error.toString(), Toast.LENGTH_LONG).show();
                 mPostTextBody.setError(error.getMessage());
                 mPostTitleHolder.setError(error.getMessage());
+                redirectToHome();
             } else {
                 Toast.makeText(this, "Your request has been Updated "
                         , Toast.LENGTH_LONG).show();
@@ -171,6 +171,7 @@ public class AddPostActivity extends AppCompatActivity {
                             , Toast.LENGTH_LONG).show();
                 }
             });
+            redirectToHome();
         }else {
             Toast.makeText(this, "Unable to share this request"
                     , Toast.LENGTH_LONG).show();
@@ -188,7 +189,8 @@ public class AddPostActivity extends AppCompatActivity {
         }
         if (mPostTextBody.getText().length() < 10){
             isOk = false;
-            mPostTitleHolder.setError("Title must be composed of more than 3 letters");
+            mPostTextBody.setError("The body of the request has only " + mPostTextBody.getText().length()
+                                        + " characters, the body needs to Have at least 10 characters");
         }else if (mPostTextBody.getText().length() > 300){
             isOk = false;
             mPostTextBody.setError("The message size is big than the allowed one\n"

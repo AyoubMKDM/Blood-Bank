@@ -14,16 +14,34 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_weight="1">
-        <TextView
-            android:id="@+id/text_user_name"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:paddingTop="5dp"
-            android:text="Test"/>
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/text_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:paddingTop="5dp"
+                android:text="Test"/>
+
+            <TextView
+                android:id="@+id/text_user_bloodtype"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test"
+                android:gravity="end"
+                android:textAllCaps="true"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorSecondaryVariant"
+                android:fontFamily="@font/reem_kufi_regular"
+                android:padding="5dp"/>
+        </LinearLayout>
         <TextView
             android:id="@+id/text_user_phoneNumber"
             android:layout_width="wrap_content"
@@ -33,15 +51,7 @@
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:paddingTop="5dp"/>
-        <TextView
-            android:id="@+id/text_user_bloodtype"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Test"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:paddingTop="5dp"/>
+
 
     </LinearLayout>
 </LinearLayout>
